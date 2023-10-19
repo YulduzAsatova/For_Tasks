@@ -26,10 +26,10 @@ public class Main {
             RegionsService regionsService = new RegionsService();
             QuarterService quarterService = new QuarterService();
             DistrictService districtService = new DistrictService();
-            //System.out.println(countryService.save());
+            System.out.println(countryService.save());
             //System.out.println(regionsService.save());
             //System.out.println(quarterService.save());
-            System.out.println(districtService.save());
+            //System.out.println(districtService.save());
         }
 
 
