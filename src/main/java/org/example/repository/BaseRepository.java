@@ -30,7 +30,7 @@ public abstract class  BaseRepository <ENTITY extends BaseModel<ID>,ID> implemen
 
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/lesson";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "postgres";
+    private static final String DB_PASSWORD = "123";
 
     @Override
     public int save() {
@@ -39,8 +39,20 @@ public abstract class  BaseRepository <ENTITY extends BaseModel<ID>,ID> implemen
             PreparedStatement preparedStatement = connection.prepareStatement(insertDataBase());
 
             for (ENTITY entity : entities) {
+                System.out.println(entity.getId()+"-"+entity.getName()+"-"+entity.getCountry_id()+"-"+
+                         entity.regionId() +"-"+entity.districtId());
                 preparedStatement.setInt(1, entity.getId());
                 preparedStatement.setString(2, entity.getName());
+              //uchtasidan bittasi 3 parameterga olinadi
+                if (entity.getCountry_id()!=null){
+                    preparedStatement.setInt(3, entity.getCountry_id());
+                }
+                if (entity.regionId()!=null){
+                    preparedStatement.setInt(3, entity.regionId());
+                }
+                if (entity.districtId()!=null){
+                    preparedStatement.setInt(3, entity.districtId());
+                }
                 preparedStatement.addBatch();
             }
             int[] result = preparedStatement.executeBatch();
@@ -56,6 +68,7 @@ public abstract class  BaseRepository <ENTITY extends BaseModel<ID>,ID> implemen
     public ENTITY findById(ID id) {
         return null;
     }
+
 
     @Override
     public List<ENTITY> getAll() {

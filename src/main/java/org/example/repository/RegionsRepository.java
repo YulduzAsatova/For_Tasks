@@ -11,7 +11,7 @@ import java.util.List;
 public class RegionsRepository extends BaseRepository<Regions,Integer>{
     private static final String PATH = "regions.json";
     private static final String STRING = "regions";
-    private static final String INSERTQUERY = "INSERT INTO regions (id, name) VALUES (?, ?)";
+    private static final String INSERTQUERY = "INSERT INTO region(id, name, country_id) VALUES (?, ?,?)";
     private static RegionsRepository repository;
 
     private RegionsRepository(){

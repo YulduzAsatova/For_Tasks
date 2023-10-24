@@ -5,7 +5,7 @@ import org.example.model.Quarter;
 public class QuarterRepository extends BaseRepository<Quarter,Integer>{
     private static final String PATH = "quarter.json";
     private static final String STRING = "quarter";
-    private static final String INSERTQUERY = "INSERT INTO quarters (id, district_id,name) VALUES (?, ?, ?)";
+    private static final String INSERTQUERY = "INSERT INTO quarter (id,name, district_id) VALUES (?, ?, ?)";
     private static QuarterRepository repository;
 
     private QuarterRepository(){
