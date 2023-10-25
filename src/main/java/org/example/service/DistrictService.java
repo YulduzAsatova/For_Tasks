@@ -8,6 +8,6 @@ public class DistrictService {
     private final DistrictRepository repository = DistrictRepository.getInstance();
 
     public int save(){
-        return repository.save();
+        return repository.save("district");
     }
 }

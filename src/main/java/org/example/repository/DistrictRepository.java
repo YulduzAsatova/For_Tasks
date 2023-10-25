@@ -2,10 +2,12 @@ package org.example.repository;
 
 import org.example.model.District;
 
+import java.util.Optional;
+
 public class DistrictRepository extends BaseRepository<District,Integer>{
     private static final String PATH = "district.json";
     private static final String STRING = "district";
-    private static final String INSERTQUERY = "INSERT INTO districts (id, region_id, name) VALUES (?, ?, ?)";
+    private static final String INSERTQUERY = "INSERT INTO district (id,  name,region_id) VALUES (?, ?, ?)";
     private static DistrictRepository repository;
 
     private DistrictRepository(){
@@ -33,5 +35,15 @@ public class DistrictRepository extends BaseRepository<District,Integer>{
             repository = new DistrictRepository();
         }
         return repository;
+    }
+
+    @Override
+    public Optional<District> getByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return false;
     }
 }

@@ -6,6 +6,6 @@ public class QuarterService {
     private final QuarterRepository repository = QuarterRepository.getInstance();
 
     public int save(){
-        return repository.save();
+        return repository.save("quarter");
     }
 }
