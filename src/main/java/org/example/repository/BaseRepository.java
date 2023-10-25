@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import org.example.model.BaseModel;
-import org.example.model.Regions;
+import org.example.model.*;
+import org.example.utils.DbConnect;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,36 +21,36 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public abstract class  BaseRepository <ENTITY extends BaseModel<ID>,ID> implements Repository<ENTITY,ID> {
+public abstract class BaseRepository<ENTITY extends BaseModel<ID>, ID> implements Repository<ENTITY, ID> {
 
     protected abstract String getFilePath();
-    protected abstract  String getFileString();
-    //protected abstract  String tableName();
-    protected abstract  String insertDataBase();
 
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/lesson";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "123";
+    protected abstract String getFileString();
+
+    //protected abstract  String tableName();
+    protected abstract String insertDataBase();
+
 
     @Override
-    public int save() {
-        List<ENTITY>entities = readFromFile();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+    public int save(String entityName) {
+        List<ENTITY> entities = readFromFile(entityName);
+        try  {
+            Connection connection= DbConnect.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(insertDataBase());
 
             for (ENTITY entity : entities) {
-                System.out.println(entity.getId()+"-"+entity.getName()+"-"+entity.getCountry_id()+"-"+
-                         entity.regionId() +"-"+entity.districtId());
+                System.out.println(entity.getId() + "-" + entity.getName() + "-" + entity.getCountry_id() + "-" +
+                        entity.regionId() + "-" + entity.districtId());
                 preparedStatement.setInt(1, entity.getId());
                 preparedStatement.setString(2, entity.getName());
-              //uchtasidan bittasi 3 parameterga olinadi
-                if (entity.getCountry_id()!=null){
+                //uchtasidan bittasi 3 parameterga olinadi
+                if (entity.getCountry_id() != null) {
                     preparedStatement.setInt(3, entity.getCountry_id());
                 }
-                if (entity.regionId()!=null){
+                if (entity.regionId() != null) {
                     preparedStatement.setInt(3, entity.regionId());
                 }
-                if (entity.districtId()!=null){
+                if (entity.districtId() != null) {
                     preparedStatement.setInt(3, entity.districtId());
                 }
                 preparedStatement.addBatch();
@@ -84,17 +84,39 @@ public abstract class  BaseRepository <ENTITY extends BaseModel<ID>,ID> implemen
     public void deleteById(ID id) {
 
     }
-    protected List<ENTITY> readFromFile(){
+
+    protected List<ENTITY> readFromFile(String entityName) {
         try {
             String file = new String(Files.readAllBytes(Paths.get(getFilePath())));
             JsonObject jsonObject = JsonParser.parseString(file).getAsJsonObject();
             JsonArray regionsArray = jsonObject.getAsJsonArray(getFileString());
-            Type type = new TypeToken<List<Regions>>() {
-            }.getType();
-            List<ENTITY> entities = new Gson().fromJson(regionsArray, type);
-            return entities;
-        }catch(IOException e){
-            throw new RuntimeException( e );
+            if (entityName.equals("country")) {
+                Type type = new TypeToken<List<Country>>() {
+                }.getType();
+                List<ENTITY> entities = new Gson().fromJson(regionsArray, type);
+                return entities;
+            }
+            if (entityName.equals("region")) {
+                Type type = new TypeToken<List<Regions>>() {
+                }.getType();
+                List<ENTITY> entities = new Gson().fromJson(regionsArray, type);
+                return entities;
+            }
+            if (entityName.equals("district")) {
+                Type type = new TypeToken<List<District>>() {
+                }.getType();
+                List<ENTITY> entities = new Gson().fromJson(regionsArray, type);
+                return entities;
+            }
+            if (entityName.equals("quarter")) {
+                Type type = new TypeToken<List<Quarter>>() {
+                }.getType();
+                List<ENTITY> entities = new Gson().fromJson(regionsArray, type);
+                return entities;
+            }
+            return null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

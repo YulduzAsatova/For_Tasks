@@ -5,7 +5,7 @@ import org.example.model.BaseModel;
 import java.util.List;
 
 public interface Repository <ENTITY extends BaseModel<ID>,ID>{
-    int save ();
+    int save (String entityName);
     ENTITY findById (ID id);
     List<ENTITY> getAll();
     ENTITY update (ID id);

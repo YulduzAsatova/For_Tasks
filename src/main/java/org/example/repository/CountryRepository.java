@@ -13,6 +13,11 @@ public class CountryRepository extends BaseRepository<Country,Integer>{
     }
 
     @Override
+    public Country findById(Integer integer) {
+        return super.findById(integer);
+    }
+
+    @Override
     protected String getFileString() {
         return STRING;
     }

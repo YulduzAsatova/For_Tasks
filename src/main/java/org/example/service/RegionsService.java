@@ -6,7 +6,7 @@ import org.example.repository.RegionsRepository;
 public class RegionsService {
     private final RegionsRepository repository = RegionsRepository.getInstance();
     public int save(){
-        return repository.save();
+        return repository.save("region");
     }
 }
 

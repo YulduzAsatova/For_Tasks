@@ -7,6 +7,6 @@ public class CountryService {
     private final CountryRepository repository = CountryRepository.getInstance();
 
     public int save(){
-        return repository.save();
+        return repository.save("country");
     }
 }
