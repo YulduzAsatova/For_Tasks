@@ -16,7 +16,7 @@ public class DistrictRepo implements Repository2<District, Integer> {
     private DistrictRepo() {
     }
 
-
+    @Override
     public int save(District district) {
         try {
             PreparedStatement statement = connection.prepareStatement("insert into  district(name, region_id) values (?,?);");
