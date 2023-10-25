@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class RegionsRepository extends BaseRepository<Regions,Integer>{
     private static final String PATH = "regions.json";
@@ -39,5 +40,15 @@ public class RegionsRepository extends BaseRepository<Regions,Integer>{
             repository = new RegionsRepository();
         }
         return repository;
+    }
+
+    @Override
+    public Optional<Regions> getByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return false;
     }
 }

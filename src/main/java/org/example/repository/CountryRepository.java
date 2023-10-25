@@ -2,6 +2,8 @@ package org.example.repository;
 
 import org.example.model.Country;
 
+import java.util.Optional;
+
 public class CountryRepository extends BaseRepository<Country,Integer>{
     private static final String PATH = "country.json";
     private static final String STRING = "country";
@@ -18,6 +20,16 @@ public class CountryRepository extends BaseRepository<Country,Integer>{
     }
 
     @Override
+    public Optional<Country> getByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return false;
+    }
+
+    @Override
     protected String getFileString() {
         return STRING;
     }
@@ -29,6 +41,7 @@ public class CountryRepository extends BaseRepository<Country,Integer>{
     private CountryRepository(){
 
     }
+
     public static CountryRepository getInstance(){
         if(repository == null){
             repository = new CountryRepository();
