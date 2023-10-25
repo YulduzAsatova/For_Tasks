@@ -14,13 +14,48 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class CountryRepo {
+public class CountryRepo implements Repository2<Country, Integer> {
     private final Connection connection = DbConnect.getConnection();
     private static CountryRepo countryRepo;
 
     private CountryRepo() {
     }
 
+    @Override
+    public int save(Country country) {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("insert into country( name) VALUES (?)");
+            statement.setString(1, country.getName());
+            int rs = statement.executeUpdate();
+            statement.close();
+            return rs;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public Optional<Country> findById(Integer id) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select *from country where  id=" + id + "");
+            Country country = new Country();
+            while (rs.next()) {
+                country.setId(rs.getInt("id"));
+                country.setName(rs.getString("name"));
+            }
+            statement.close();
+            return Optional.of(country);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public List<Country> getAll() {
         List<Country> countries = new ArrayList<>();
         try {
@@ -41,18 +76,27 @@ public class CountryRepo {
         return countries;
     }
 
-    public void update(Country country) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("update country set name = ? where id=?;");
-        statement.setString(1,country.getName());
-        statement.setInt(2,country.getId());
-        int rs = statement.executeUpdate();
-        statement.close();
+    @Override
+    public int update(Country country, Integer id) {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("update country set name = ? where id=?;");
+            statement.setString(1, country.getName());
+            statement.setInt(2, id);
+            int rs = statement.executeUpdate();
+            statement.close();
+            return rs;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 
-    public boolean existByName(String name) {
+    @Override
+    public boolean existsByName(String name) {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT COUNT (name) FROM country Where name =?;");
-            statement.setString(1,name);
+            statement.setString(1, name);
             statement.executeQuery();
             ResultSet resultSet = statement.getResultSet();
             boolean recordFound = resultSet.next();
@@ -63,10 +107,12 @@ public class CountryRepo {
         return false;
     }
 
-    public Optional<Country> getById(int id) {
+    @Override
+    public Optional<Country> getByName(String name) {
+       PreparedStatement statement = null;
         try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select *from country where  id=" + id + "");
+            statement = connection.prepareStatement("select * from country where name= ?;");
+            ResultSet rs = statement.executeQuery();
             Country country = new Country();
             while (rs.next()) {
                 country.setId(rs.getInt("id"));
@@ -74,29 +120,16 @@ public class CountryRepo {
             }
             statement.close();
             return Optional.of(country);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-       return Optional.empty();
+        return Optional.empty();
     }
 
-    public void add(Country country) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("insert into country(name) values( '" + country.getName() + "' ) ");
-        statement.close();
-    }
 
-    public Country getByName(String name) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("select * from country where name= '" + name + "' ");
-        Country country = new Country();
-        while (rs.next()) {
-            country.setId(rs.getInt("id"));
-            country.setName(rs.getString("name"));
-        }
-        statement.close();
-        return country;
+    @Override
+    public int deleteById(Integer integer) {
+        return 0;
     }
 
     public static CountryRepo getInstance() {
